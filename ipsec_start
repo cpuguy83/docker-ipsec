@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [[ -z $IPSEC_DEFAULT_PSK_LENGTH ]]; then
+  export IPSEC_DEFAULT_PSK_LENGTH=32
+fi
+
+if [[ ! -f /etc/ipsec.secrets ]]; then
+  echo ": PSK \"$(openssl rand -base64 $IPSEC_DEFAULT_PSK_LENGTH)\"" >> /etc/ipsec.secrets
+fi
+
+exec /usr/libexec/ipsec/starter --nofork "$@"
