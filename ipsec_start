@@ -6,7 +6,8 @@ int() {
   echo "Caught INT, exiting"
   exit 255
 }
-trap term TERM {
+trap term TERM
+term(){
   echo "Gracefully shutting down"
   exit 0
 }
@@ -24,9 +25,8 @@ if [ ! -f /etc/ipsec.secrets ]; then
 fi
 
 WAIT_INT=$1
-: ${WAIT_INT=eth1}
 
-if [ -f $(which pipework) ]; then
+if [ ! -z $WAIT_INT ]; then
   pipework --wait $WAIT_INT
 fi
 

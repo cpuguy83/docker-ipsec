@@ -11,10 +11,10 @@ RUN mkdir -p /etc/ipsec.d/aacerts && mkdir -p /etc/ipsec.d/cacerts && mkdir -p /
 RUN echo "include /etc/ipsec.d/conf/*.conf" >> /etc/ipsec.conf
 
 ADD ipsec_start /usr/local/bin/ipsec_start
+ADD pipework /usr/local/bin/pipework
 
 VOLUME /etc/ipsec.d
 
 EXPOSE 500
 
 ENTRYPOINT ["/usr/local/bin/ipsec_start"]
-CMD [""]
