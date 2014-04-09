@@ -1,12 +1,28 @@
 #!/bin/bash
 
-if [[ -z $IPSEC_DEFAULT_PSK_LENGTH ]]; then
-  export IPSEC_DEFAULT_PSK_LENGTH=32
-fi
+# Traps are to handle if we are waiting on pipework
+trap int INT
+int() {
+  echo "Caught INT, exiting"
+  exit 255
+}
+trap term TERM {
+  echo "Gracefully shutting down"
+  exit 0
+}
 
-if [[ ! -f /etc/ipsec.secrets ]]; then
+: ${IPSEC_DEFAULT_PSK_LENGTH=32}
+
+if [ ! -f /etc/ipsec.secrets ]; then
   echo ": PSK \"$(openssl rand -base64 $IPSEC_DEFAULT_PSK_LENGTH)\"" >> /etc/ipsec.d/ipsec.secrets
   ln -s /etc/ipsec.d/ipsec.secrets /etc/ipsec.secrets
+fi
+
+WAIT_INT=$1
+: ${WAIT_INT=eth1}
+
+if [ -f $(which pipework) ]; then
+  pipework --wait $WAIT_INT
 fi
 
 exec /usr/libexec/ipsec/starter --nofork
