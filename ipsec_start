@@ -11,6 +11,11 @@ trap term TERM {
   exit 0
 }
 
+pid=/var/run/starter.charon.pid
+if [ -f $pid ]; then
+  rm $pid
+fi
+
 : ${IPSEC_DEFAULT_PSK_LENGTH=32}
 
 if [ ! -f /etc/ipsec.secrets ]; then
