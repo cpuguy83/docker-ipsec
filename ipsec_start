@@ -27,6 +27,7 @@ fi
 WAIT_INT=$1
 
 if [ ! -z $WAIT_INT ]; then
+  echo "Waiting for pipework"
   pipework --wait $WAIT_INT
 fi
 
